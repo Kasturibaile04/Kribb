@@ -1,15 +1,15 @@
 import { useAuth } from "@clerk/expo";
-import { Stack, Redirect, Slot } from "expo-router";
+import { Redirect, Slot } from "expo-router";
 
 export default function RootLayout() {
-    const {isLoaded, isSignedIn} = useAuth();
+    const { isLoaded, isSignedIn } = useAuth();
 
     // sync Clerk user -> Supabase 
-    
+
 
     if (!isLoaded) return null;
-    
-    if (isSignedIn) return <Redirect href="/sign-in" />
-    
+
+    if (!isSignedIn) return <Redirect href="/sign-in" />
+
     return <Slot />;
 }
