@@ -20,6 +20,7 @@ export default function SignUp() {
   // 3. UI State for Loading & Error Messages
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [pendingVerification, setPendingVerification] = useState(false)
 
   // Hide component if already signed in
   if (signUp?.status === 'complete' || isSignedIn) {
@@ -49,6 +50,8 @@ export default function SignUp() {
 
       // Send email verification code
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
+      // ✅ Switch to verification screen using local state
+      setPendingVerification(true)
     } catch (err: any) {
       // Catch and display Clerk error messages
       setErrorMessage(err?.errors?.[0]?.message || 'Something went wrong during sign up')
@@ -73,10 +76,8 @@ export default function SignUp() {
       // If code is correct and sign up is complete
       if (completeSignUp.status === 'complete') {
         // Activate session to log user in on the device
+        // The (auth)/_layout.tsx will automatically redirect when isSignedIn becomes true
         await setActive({ session: completeSignUp.createdSessionId })
-
-        // Redirect to main tabs/home screen
-        router.replace('/')
       } else {
         console.log('Sign up status not complete:', completeSignUp)
       }
@@ -88,12 +89,22 @@ export default function SignUp() {
   }
 
   // --- VIEW 2: VERIFICATION SCREEN ---
-  if (
-    signUp?.status === 'missing_requirements' &&
-    signUp?.unverifiedFields?.includes('email_address')
-  ) {
+  if (pendingVerification) {
     return (
+
       <View className="flex-1 justify-center px-6 py-12 bg-white">
+        {/* back button */}
+        <TouchableOpacity
+          onPress={() => {
+            // ✅ Simply flip the local state — goes back to sign-up form
+            setPendingVerification(false)
+            setCode('')
+            setErrorMessage('')
+          }}
+          className="absolute top-10 left-6 z-10 mt-10"
+        >
+          <FontAwesome name="arrow-left" size={24} color="black" />
+        </TouchableOpacity>
         <Image
           source={require('@/assets/images/kribb.png')}
           className="w-32 h-16 mb-8"
@@ -140,7 +151,7 @@ export default function SignUp() {
 
           {/* Resend Code Button */}
           <TouchableOpacity
-            onPress={() => signUp.prepareEmailAddressVerification({ strategy: 'email_code' })}
+            onPress={() => signUp?.prepareEmailAddressVerification({ strategy: 'email_code' })}
             className="py-2"
           >
             <Text className="text-black text-center font-bold">Resend Code</Text>
