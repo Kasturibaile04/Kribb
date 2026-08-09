@@ -1,12 +1,13 @@
+import FeatureCard from '@/components/FeatureCard'
+import PropertyCard from '@/components/PropertyCard'
 import { useSupabase } from '@/lib/useSupabase'
 import { Property } from '@/types'
 import { useUser } from '@clerk/expo'
-import { useFocusEffect } from 'expo-router'
+import { FontAwesome } from '@expo/vector-icons'
+import { useFocusEffect, useRouter } from 'expo-router'
 import { useCallback, useState } from 'react'
 import { ActivityIndicator, FlatList, Image, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { FontAwesome } from '@expo/vector-icons'
-import { useRouter } from 'expo-router'
 
 
 export default function HomeScreen() {
@@ -98,8 +99,8 @@ export default function HomeScreen() {
 
                             <FontAwesome name='search' size={20} color='#6B7280' />
                             <Text className='text-gray-500 ml-3'>Search Properties</Text>
-                            <TouchableOpacity onPress={() => router.push('/(root)/(tabs)/search ? openFilter=true')}
-                            className='w-8 h-8 bg-black-600 rounded-xl items-center justify-center'>
+                            <TouchableOpacity onPress={() => router.push('/(root)/(tabs)/search')}
+                                className='w-8 h-8 bg-black-600 rounded-xl items-center justify-center'>
                                 <FontAwesome name='filter' size={20} color='#6B7280' />
                             </TouchableOpacity>
                         </TouchableOpacity>
@@ -121,11 +122,7 @@ export default function HomeScreen() {
                                 showsHorizontalScrollIndicator={false}
                                 contentContainerStyle={{ paddingHorizontal: 20 }}
                                 renderItem={({ item }) => (
-                                    <Feature className="mx-4 mb-3 bg-white rounded-xl p-4 shadow-sm">
-                                        <Text className="text-lg font-semibold">{item.title}</Text>
-                                        <Text className="text-gray-500">{item.address}, {item.city}</Text>
-                                        <Text className="text-black font-bold mt-1">₹{item.price.toLocaleString()}</Text>
-                                    </View>
+                                    <FeatureCard Property={item} />
                                 )}
                                 ListEmptyComponent={
                                     <View className="flex-1 justify-center items-center mt-20">
@@ -140,10 +137,8 @@ export default function HomeScreen() {
                     </View>
                 }
                 renderItem={({ item }) => (
-                    <View className="mx-4 mb-3 bg-white rounded-xl p-4 shadow-sm">
-                        <Text className="text-lg font-semibold">{item.title}</Text>
-                        <Text className="text-gray-500">{item.address}, {item.city}</Text>
-                        <Text className="text-black font-bold mt-1">₹{item.price.toLocaleString()}</Text>
+                    <View className='px-5'>
+                        <PropertyCard property={item} />
                     </View>
 
                 )}
