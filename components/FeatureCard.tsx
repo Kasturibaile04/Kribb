@@ -21,11 +21,17 @@ export default function FeatureCard({ Property: property }: { Property: Property
       }}
       onPress={() => router.push(`/(root)/property/${property.id}` as any)}
     >
-      <Image
-        source={{ uri: property.images[0] }}
-        resizeMode='cover'
-        className='w-full h-44'
-      />
+      {property.images[0] ? (
+        <Image
+          source={{ uri: property.images[0] }}
+          resizeMode='cover'
+          className='w-full h-44'
+        />
+      ) : (
+        <View className='w-full h-44 bg-gray-100 items-center justify-center'>
+          <MaterialIcons name='image-not-supported' size={40} color='#9CA3AF' />
+        </View>
+      )}
 
       {/* Property type badge */}
       <View className='absolute top-3 left-3 bg-white/90 px-3 py-1 rounded-full'>

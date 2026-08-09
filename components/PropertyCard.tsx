@@ -16,8 +16,6 @@ export default function PropertyCard({
 }) {
     const router = useRouter();
 
-    const isSaved = true;
-
     return (
         <TouchableOpacity
             className='flex-row bg-white rounded-2xl mb-4 overflow-hidden'
@@ -31,11 +29,17 @@ export default function PropertyCard({
             }}
             onPress={() => router.push(`/(root)/property/${property.id}` as any)}
         >
-            <Image
-                source={{ uri: property.images[0] }}
-                resizeMode='cover'
-                className='w-28 h-28'
-            />
+            {property.images[0] ? (
+                <Image
+                    source={{ uri: property.images[0] }}
+                    resizeMode='cover'
+                    className='w-28 h-28'
+                />
+            ) : (
+                <View className='w-28 h-28 bg-gray-100 items-center justify-center'>
+                    <MaterialIcons name='image-not-supported' size={28} color='#9CA3AF' />
+                </View>
+            )}
 
             <View className='flex-1 p-3 justify-between'>
                 <View>
@@ -65,14 +69,16 @@ export default function PropertyCard({
                 </View>
             </View>
 
-            {/* Save / Unsave button */}
-            <TouchableOpacity className='w-10 items-center pt-3' onPress={onUnsave}>
-                <MaterialIcons
-                    name={showSave ? 'favorite' : 'favorite-border'}
-                    size={24}
-                    color={showSave ? 'red' : '#6B7280'}
-                />
-            </TouchableOpacity>
+            {/* Save / Unsave button — only rendered when a handler is provided */}
+            {onUnsave && (
+                <TouchableOpacity className='w-10 items-center pt-3' onPress={onUnsave}>
+                    <MaterialIcons
+                        name={showSave ? 'favorite' : 'favorite-border'}
+                        size={24}
+                        color={showSave ? 'red' : '#6B7280'}
+                    />
+                </TouchableOpacity>
+            )}
 
             {/* Full-card SOLD overlay */}
             {property.is_sold && (
