@@ -16,9 +16,11 @@ export default function PropertyCard({
 }) {
     const router = useRouter();
 
+
+
     return (
         <TouchableOpacity
-            className='flex-row bg-white rounded-2xl mb-4 overflow-hidden'
+            className='flex-row bg-white rounded-xl mb-3 overflow-hidden'
             style={{
                 shadowColor: "#000",
                 shadowOffset: { width: 0, height: 2 },
@@ -75,7 +77,7 @@ export default function PropertyCard({
                     <MaterialIcons
                         name={showSave ? 'favorite' : 'favorite-border'}
                         size={24}
-                        color={showSave ? 'red' : '#6B7280'}
+                        color={showSave ? 'red' : '#e23a3aff'}
                     />
                 </TouchableOpacity>
             )}

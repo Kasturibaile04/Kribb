@@ -10,7 +10,7 @@ export default function FeatureCard({ Property: property }: { Property: Property
 
   return (
     <TouchableOpacity
-      className='bg-white rounded-xl border border-gray-200 overflow-hidden w-72'
+      className='bg-white rounded-xl border border-gray-200 overflow-hidden w-80 mb-4 mt-4 mr-4'
       style={{
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
@@ -25,7 +25,7 @@ export default function FeatureCard({ Property: property }: { Property: Property
         <Image
           source={{ uri: property.images[0] }}
           resizeMode='cover'
-          className='w-full h-44'
+          className='w-full h-44 '
         />
       ) : (
         <View className='w-full h-44 bg-gray-100 items-center justify-center'>

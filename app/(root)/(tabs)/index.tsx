@@ -80,7 +80,7 @@ export default function HomeScreen() {
                                 resizeMode='contain' />
 
                             <View className='item-end'>
-                                <Text>Good Morning</Text>
+                                <Text>Good Morning </Text>
                                 <Text className='text-grey-900 text-base font-bold'>{user?.fullName ?? 'User'}</Text>
 
                             </View>
@@ -101,7 +101,7 @@ export default function HomeScreen() {
                             <Text className='text-gray-500 ml-3'>Search Properties</Text>
                             <TouchableOpacity onPress={() => router.push('/(root)/(tabs)/search')}
                                 className='w-8 h-8 bg-black-600 rounded-xl items-center justify-center'>
-                                <FontAwesome name='filter' size={20} color='#6B7280' />
+                                {/* <FontAwesome name='filter' size={20} color='#6B7280' /> */}
                             </TouchableOpacity>
                         </TouchableOpacity>
 
@@ -120,7 +120,7 @@ export default function HomeScreen() {
                                 keyExtractor={(item) => item.id}
                                 horizontal
                                 showsHorizontalScrollIndicator={false}
-                                contentContainerStyle={{ paddingHorizontal: 20 }}
+                                // contentContainerStyle={{ paddingHorizontal: 0 }}
                                 renderItem={({ item }) => (
                                     <FeatureCard Property={item} />
                                 )}
