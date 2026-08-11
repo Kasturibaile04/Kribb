@@ -36,6 +36,15 @@ const {
     setMaxPrice,
     resetFilters
   } = useFilterStore 
+
+  const activeFilterCount = [
+    type !== 'all',
+    bedrooms !== 'any',
+    minPrice !== '',
+    maxPrice !== '',
+    search.length > 0
+  ].filter(Boolean).length;
+  
   return (
     <SafeAreaView className='flex-1 bg-gray-50'>
     <View className='px-5 pt-4 pb-3'>
@@ -62,12 +71,12 @@ const {
             />
             {search.length > 0 && (
               <TouchableOpacity onPress={() => setSearch('')}>
-                <MaterialIcons name='close' size={20} color={activeFliterCount > 0 ? '#fff' : '#9CA3AF'} />
+                <MaterialIcons name='close' size={20} color='#9CA3AF' />
               </TouchableOpacity>
             )}
           </View>
           <TouchableOpacity className='bg-primary p-3 rounded-lg'>
-            <MaterialIcons name='filter-alt' size={20} color='white' />
+            <MaterialIcons name='filter-alt' size={20} color= {activeFilterCount > 0 ? '#fff' : '#9CA3AF'} />
           </TouchableOpacity>
         </View>
     </View>
