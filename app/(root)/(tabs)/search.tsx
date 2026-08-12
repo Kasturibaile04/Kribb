@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { Property } from '@/types'
 import { useLocalSearchParams } from 'expo-router'
 import { useEffect } from 'react'
+import FilterModel from '@/components/FilterModel'
 
 
 export default function Search() {
@@ -69,7 +70,7 @@ const {
               onChangeText={setSearch}
               autoCapitalize='none'
             />
-            {search.length > 0 && (
+            {activeFilterCount > 0 && (
               <TouchableOpacity onPress={() => setSearch('')}>
                 <MaterialIcons name='close' size={20} color='#9CA3AF' />
               </TouchableOpacity>
@@ -79,7 +80,15 @@ const {
             <MaterialIcons name='filter-alt' size={20} color= {activeFilterCount > 0 ? '#fff' : '#9CA3AF'} />
           </TouchableOpacity>
         </View>
+        {/* Filter chips */}
     </View>
+    {/* Result */}
+
+    {/* FilterModel */}
+    <FilterModel
+    visible={showFilters}
+    onClose={() => setShowFilters(false)}
+    />
     </SafeAreaView>
   )
 }
