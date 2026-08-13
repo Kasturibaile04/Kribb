@@ -71,16 +71,14 @@ export default function PropertyCard({
                 </View>
             </View>
 
-            {/* Save / Unsave button — only rendered when a handler is provided */}
-            {onUnsave && (
-                <TouchableOpacity className='w-10 items-center pt-3' onPress={onUnsave}>
-                    <MaterialIcons
-                        name={showSave ? 'favorite' : 'favorite-border'}
-                        size={24}
-                        color={showSave ? 'red' : '#e23a3aff'}
-                    />
-                </TouchableOpacity>
-            )}
+            {/* Save / Unsave button */}
+            <TouchableOpacity className='w-10 items-center pt-3' onPress={onUnsave}>
+                <MaterialIcons
+                    name={showSave ? 'favorite' : 'favorite-border'}
+                    size={24}
+                    color={showSave ? 'red' : '#e23a3aff'}
+                />
+            </TouchableOpacity>
 
             {/* Full-card SOLD overlay */}
             {property.is_sold && (

@@ -1,9 +1,11 @@
+export type PropertyType = 'apartment' | 'house' | 'villa' | 'studio';
+
 export interface Property {
     id: string;
     title: string;
     description: string;
     price: number;
-    type: 'apartment' | 'house' | 'villa' | 'studio';
+    type: PropertyType;
     bedrooms: number;
     bathrooms: number;
     area_sqft: number;

@@ -25,7 +25,7 @@ export default function FeatureCard({ Property: property }: { Property: Property
         <Image
           source={{ uri: property.images[0] }}
           resizeMode='cover'
-          className='w-full h-44 '
+          className='w-full h-44'
         />
       ) : (
         <View className='w-full h-44 bg-gray-100 items-center justify-center'>
