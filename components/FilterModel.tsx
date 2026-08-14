@@ -141,41 +141,66 @@ export default function FilterModel({ visible, onClose }: {
 
                     <Text className='text-gray-700 font-semibold mb-4'>Price Range (₹)</Text>
                     <View className='flex-row gap-3 mb-6'>
-                        <TextInput
-                            className='flex-1 border border-gray-300 rounded-lg px-4 py-3 text-gray-700'
-                            placeholder='Min'
-                            keyboardType='numeric'
-                            value={localMinPrice}
-                            onChangeText={setLocalMinPrice}
-                        />
-                        <TextInput
-                            className='flex-1 border border-gray-300 rounded-lg px-4 py-3 text-gray-700'
-                            placeholder='Max'
-                            keyboardType='numeric'
-                            value={localMaxPrice}
-                            onChangeText={setLocalMaxPrice}
-                        />
-                    </View>
-
-                    <Text className='text-gray-700 font-semibold mb-4'>Price Presets</Text>
-                    <View className='flex-row flex-wrap gap-2 mb-6'>
-                        {PRICE_PRESETS.map((p) => (
-                            <TouchableOpacity
-                                key={p.label}
-                                onPress={() => {
-                                    setMinPrice(p.min);
-                                    setMaxPrice(p.max);
-                                    setLocalMinPrice(p.min ? String(p.min) : '');
-                                    setLocalMaxPrice(p.max ? String(p.max) : '');
-                                }}
-                                className={chip(minPrice === p.min && maxPrice === p.max)}
-                            >
-                                <Text className={chipText(minPrice === p.min && maxPrice === p.max)}>{p.label}</Text>
-                            </TouchableOpacity>
+                        {[
+                            {
+                                label: "Min Price",
+                                value: localMinPrice,
+                                placeholder: "0",
+                                onChangeText: setLocalMinPrice,
+                            },
+                            {
+                                label: "Max Price",
+                                value: localMaxPrice,
+                                placeholder: "Any",
+                                onChangeText: setLocalMaxPrice,
+                            }
+                        ].map(({ label, value, onChangeText, placeholder }) => (
+                            <View key={label} className='flex-1'>
+                                <Text className='text-gray-700 font-semibold mb-2'>{label}</Text>
+                                <TextInput
+                                    className='border border-gray-300 rounded-lg px-4 py-3 text-gray-700'
+                                    placeholder={placeholder}
+                                    keyboardType='numeric'
+                                    value={value}
+                                    onChangeText={onChangeText}
+                                    placeholderTextColor="#9CA3AF"
+                                />
+                            </View>
                         ))}
                     </View>
-
+                    <Text className='text-gray-700 font-semibold mb-4'>Price Presets</Text>
+                    <View className='flex-row flex-wrap gap-2 mb-6'>
+                        {PRICE_PRESETS.map((p) => {
+                            const isActive = minPrice === p.min && maxPrice === p.max;
+                            return (
+                                <TouchableOpacity
+                                    key={p.label}
+                                    onPress={() => {
+                                        setMinPrice(p.min);
+                                        setMaxPrice(p.max);
+                                        setLocalMinPrice(p.min ? String(p.min) : '');
+                                        setLocalMaxPrice(p.max ? String(p.max) : '');
+                                    }}
+                                    className={chip(isActive)}
+                                >
+                                    <Text className={chipText(isActive)}>{p.label}</Text>
+                                </TouchableOpacity>
+                            );
+                        })}
+                    </View>
                 </ScrollView>
+
+                {/* Apply Button */}
+                <View className='p-4 border-t border-gray-200 bg-white'>
+                    <TouchableOpacity
+                        onPress={handleApply}
+                        className='bg-blue-600 py-4 rounded-xl items-center'
+                    >
+                        <Text className='text-white font-bold text-lg text-center'>
+                            Apply Filters
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </Modal>
     )

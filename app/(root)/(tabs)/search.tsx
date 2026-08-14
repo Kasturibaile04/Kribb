@@ -6,6 +6,7 @@ import { useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { supabase } from '@/lib/supabase'
 
 
 export default function Search() {
@@ -44,6 +45,42 @@ export default function Search() {
     search.length > 0
   ].filter(Boolean).length;
 
+  const fetchResults = async () => {
+    setLoading(true);
+
+    let query = supabase.from('properties').select('*');
+
+    if (search) {
+      query = query.ilike('title', `%${search}%`);
+    }
+
+    if (type) {
+      query = query.eq('type', type);
+    }
+
+    if (bedrooms) {
+      query = query.eq('bedrooms', bedrooms);
+    }
+
+    if (minPrice) {
+      query = query.gte('price', minPrice);
+    }
+
+    if (maxPrice) {
+      query = query.lte('price', maxPrice);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('Error fetching properties:', error);
+      return;
+    }
+
+    setResults(data || []);
+    setLoading(false);
+  }
+
   return (
     <SafeAreaView className='flex-1 bg-gray-50'>
       <View className='px-5 pt-4 pb-3'>
@@ -79,6 +116,46 @@ export default function Search() {
           </TouchableOpacity>
         </View>
         {/* Filter chips */}
+        {activeFilterCount > 0 && (
+          <View className='flex-row gap-2 mt-4'>
+            {type && (
+              <View className='flex-row items-center bg-blue-50 border
+              border-blue-200 rounded-full px-3 py-1.5'>
+                <Text className='text-blue-700 font-medium mr-1'>Type: {type}</Text>
+                <TouchableOpacity onPress={() => setType(null)}>
+                  <MaterialIcons name='close' size={16} color='#2563EB' />
+                </TouchableOpacity>
+              </View>
+            )}
+            {bedrooms && (
+              <View className='flex-row items-center bg-blue-50 border
+              border-blue-200 rounded-full px-3 py-1.5'>
+                <Text className='text-blue-700 font-medium mr-1'>Bedrooms: {bedrooms}</Text>
+                <TouchableOpacity onPress={() => setBedrooms(null)}>
+                  <MaterialIcons name='close' size={16} color='#2563EB' />
+                </TouchableOpacity>
+              </View>
+            )}
+            {minPrice && (
+              <View className='flex-row items-center bg-blue-50 border
+              border-blue-200 rounded-full px-3 py-1.5'>
+                <Text className='text-blue-700 font-medium mr-1'>Min Price: ₹{minPrice}</Text>
+                <TouchableOpacity onPress={() => setMinPrice(null)}>
+                  <MaterialIcons name='close' size={16} color='#2563EB' />
+                </TouchableOpacity>
+              </View>
+            )}
+            {maxPrice && (
+              <View className='flex-row items-center bg-blue-50 border
+              border-blue-200 rounded-full px-3 py-1.5'>
+                <Text className='text-blue-700 font-medium mr-1'>Max Price: ₹{maxPrice}</Text>
+                <TouchableOpacity onPress={() => setMaxPrice(null)}>
+                  <MaterialIcons name='close' size={16} color='#2563EB' />
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        )}
       </View>
       {/* Result */}
 
