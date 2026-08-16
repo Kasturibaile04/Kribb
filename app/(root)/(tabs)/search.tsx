@@ -1,12 +1,14 @@
 import FilterModel from '@/components/FilterModel'
+import PropertyCard from '@/components/PropertyCard'
+import { supabase } from '@/lib/supabase'
 import { useFilterStore } from '@/store/filterStore'
 import { Property } from '@/types'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useState } from 'react'
-import { Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { supabase } from '@/lib/supabase'
+
 
 
 export default function Search() {
@@ -45,13 +47,17 @@ export default function Search() {
     search.length > 0
   ].filter(Boolean).length;
 
+  useEffect(() => {
+    fetchResults();
+  }, [search, type, bedrooms, minPrice, maxPrice]);
+
   const fetchResults = async () => {
     setLoading(true);
 
     let query = supabase.from('properties').select('*');
 
     if (search) {
-      query = query.ilike('title', `%${search}%`);
+      query = query.or(`title.ilike.%${search}%,city.ilike.%${search}%`);
     }
 
     if (type) {
@@ -70,7 +76,7 @@ export default function Search() {
       query = query.lte('price', maxPrice);
     }
 
-    const { data, error } = await query;
+    const { data, error } = await query.order('created_at', { ascending: false });
 
     if (error) {
       console.error('Error fetching properties:', error);
@@ -140,7 +146,10 @@ export default function Search() {
               <View className='flex-row items-center bg-blue-50 border
               border-blue-200 rounded-full px-3 py-1.5'>
                 <Text className='text-blue-700 font-medium mr-1'>Min Price: ₹{minPrice}</Text>
-                <TouchableOpacity onPress={() => setMinPrice(null)}>
+                <TouchableOpacity onPress={() => {
+                  setMinPrice(null);
+                  setMaxPrice(null);
+                }}>
                   <MaterialIcons name='close' size={16} color='#2563EB' />
                 </TouchableOpacity>
               </View>
@@ -149,7 +158,10 @@ export default function Search() {
               <View className='flex-row items-center bg-blue-50 border
               border-blue-200 rounded-full px-3 py-1.5'>
                 <Text className='text-blue-700 font-medium mr-1'>Max Price: ₹{maxPrice}</Text>
-                <TouchableOpacity onPress={() => setMaxPrice(null)}>
+                <TouchableOpacity onPress={() => {
+                  setMaxPrice(null);
+                  setMinPrice(null);
+                }}>
                   <MaterialIcons name='close' size={16} color='#2563EB' />
                 </TouchableOpacity>
               </View>
@@ -158,6 +170,37 @@ export default function Search() {
         )}
       </View>
       {/* Result */}
+      <FlatList
+        data={results}
+        keyExtractor={(item) => item.id.toString()}
+        
+        renderItem={({ item }) => (
+          <PropertyCard property={item} />
+        )}
+        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 20 }}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          loading ? (
+            <View className='items-center justify-center mt-12'>
+              <ActivityIndicator size='large' color='#2563EB' />
+              <Text className='text-gray-500 mt-2'>Searching...</Text>
+            </View>
+
+          ) : null
+        }
+
+
+        ListEmptyComponent={
+          !loading && results.length === 0 ? (
+            <View className='items-center justify-center mt-12'>
+              <MaterialIcons name='search' size={48} color='#9CA3AF' />
+              <Text className='text-gray-500 mt-2'>No properties found</Text>
+            </View>
+          ) : null
+        }
+      />
+
+
 
       {/* FilterModel */}
       <FilterModel
