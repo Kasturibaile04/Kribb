@@ -173,7 +173,7 @@ export default function Search() {
       <FlatList
         data={results}
         keyExtractor={(item) => item.id.toString()}
-        
+
         renderItem={({ item }) => (
           <PropertyCard property={item} />
         )}
@@ -188,15 +188,20 @@ export default function Search() {
 
           ) : null
         }
-
-
+        
         ListEmptyComponent={
           !loading && results.length === 0 ? (
             <View className='items-center justify-center mt-12'>
               <MaterialIcons name='search' size={48} color='#9CA3AF' />
               <Text className='text-gray-500 mt-2'>No properties found</Text>
+              <Text className='text-gray-500 mt-2'>
+                Try adjusting your search or filters.
+              </Text>
             </View>
-          ) : null
+          ) : (
+            <ActivityIndicator size='large' color='#2563EB'
+            className='py-20' />
+          )
         }
       />
 
